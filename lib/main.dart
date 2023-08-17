@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:theolive_flutter_sample/theolive_view.dart';
+import 'package:theolive_flutter_sample/theolive_view_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,8 +58,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  late THEOliveViewController _theoController;
+  UniqueKey playerUniqueKey = UniqueKey();
+
   void _callLoadChannel() {
-    //TODO: call loadChannel
+    _theoController.loadChannel("0nhw9z5zaz6bek27vdng81be5");
   }
 
   @override
@@ -99,6 +104,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             const Text(
               'THEOlive',
+            ),
+            Container(width: 300, height: 300, child:
+              THEOliveView(key: playerUniqueKey, onTHEOliveViewCreated:(THEOliveViewController controller) {
+                // assign the controller to interact with the player
+                _theoController = controller;
+              }
+              )
             ),
           ],
         ),
