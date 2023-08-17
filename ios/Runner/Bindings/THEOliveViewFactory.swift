@@ -1,5 +1,5 @@
 //
-//  THEOliveNativeViewFactory.swift
+//  THEOliveViewFactory.swift
 //  flutter_theolive
 //
 //  Created by Daniel on 16/07/2023.
