@@ -33,9 +33,10 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   if value is NSNull { return nil }
   return value as! T?
 }
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol THEOliveNativeAPI {
-  func loadChannel(channelID: String) throws
+  func loadChannel(channelID: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -48,11 +49,13 @@ class THEOliveNativeAPISetup {
       loadChannelChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let channelIDArg = args[0] as! String
-        do {
-          try api.loadChannel(channelID: channelIDArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        api.loadChannel(channelID: channelIDArg) { result in
+          switch result {
+            case .success:
+              reply(wrapResult(nil))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
         }
       }
     } else {

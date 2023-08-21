@@ -42,9 +42,10 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface THEOliveNativeAPI {
-  fun loadChannel(channelID: String)
+  fun loadChannel(channelID: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by THEOliveNativeAPI. */
@@ -60,14 +61,14 @@ interface THEOliveNativeAPI {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val channelIDArg = args[0] as String
-            var wrapped: List<Any?>
-            try {
-              api.loadChannel(channelIDArg)
-              wrapped = listOf<Any?>(null)
-            } catch (exception: Throwable) {
-              wrapped = wrapError(exception)
+            api.loadChannel(channelIDArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

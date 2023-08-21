@@ -18,6 +18,8 @@ import 'package:pigeon/pigeon.dart';
 //Talking to the native
 @HostApi()
 abstract class THEOliveNativeAPI {
+
+  @async
   void loadChannel(String channelID);
 }
 
