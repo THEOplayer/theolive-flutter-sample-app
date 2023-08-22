@@ -63,9 +63,10 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     }
     
     // THEOliveNativeAPI
-    func loadChannel(channelID: String) throws {
+    func loadChannel(channelID: String, completion: @escaping (Result<Void, Error>) -> Void) {
         print(THEOliveView.TAG + " loadChannel API call")
         self.player.loadChannel(channelID)
+        completion(Result.success({}()))
     }
     
     // THEOlivePlayerEventListener

@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.theolive.player.api.*
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.platform.PlatformView
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import live.theo.theolive_flutter_sample.bindings.pigeon.THEOliveFlutterAPI
 import live.theo.theolive_flutter_sample.bindings.pigeon.THEOliveNativeAPI
 
@@ -22,10 +22,13 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
     EventListener, THEOliveNativeAPI {
 
     private val cv: ComposeView
-    private lateinit var player: THEOlivePlayer
+    private var player: THEOlivePlayer? = null
+
     private val constraintLayout: LinearLayout
 
     private val flutterApi: THEOliveFlutterAPI
+
+    private var loadChannelJob: Deferred<Unit>? = null
 
     init {
 
@@ -46,14 +49,19 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
         cv.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         cv.setContent {
-            val scope = rememberCoroutineScope()
             val player = rememberTHEOlivePlayer()
 
-            this.player = player
+            if (this.player == null) {
+                this.player = player
+                player.addEventListener(this);
+            }
+
+            //if we had a too early loadChannel call, it is deferred until this moment
+            loadChannelJob?.let {
+                loadChannelJob!!.start()
+            }
 
             THEOliveChromeless(modifier = Modifier.fillMaxSize(), player = player)
-
-            player.addEventListener(this);
 
         }
 
@@ -74,14 +82,43 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
     }
 
     override fun dispose() {
-        //TODO("Not yet implemented")
+        loadChannelJob?.isActive.let {
+            loadChannelJob?.cancel("DISPOSED", CancellationException("THEOliveView disposed!"))
+        }
     }
 
-    override fun loadChannel(channelID: String) {
-        runBlocking {
-            Log.d("THEOliveView", "loadChannel: $channelID, player: $player");
-            player.loadChannel(channelID)
+    override fun loadChannel(channelID: String, callback: (Result<Unit>) -> Unit) {
+        Log.d("THEOliveView", "loadChannel called, $channelID");
+
+        loadChannelJob?.cancel("CANCELED", CancellationException("New channel loading started!"))
+
+        loadChannelJob = MainScope().async(start = CoroutineStart.LAZY) {
+            Log.d("THEOliveView", "loadChannel started: $channelID, player: $player");
+            player!!.loadChannel(channelID)
         }
+
+        loadChannelJob!!.invokeOnCompletion {
+            Log.d("THEOliveView", "loadChannel completed, $it");
+            loadChannelJob = null
+
+            if (it == null) {
+                callback(Result.success(Unit))
+            } else {
+                if (it is CancellationException) {
+                    callback(Result.failure(it))
+                } else {
+                    // if it is not our exception, we throw it further
+                    throw it
+                }
+            }
+        }
+
+        if (player == null) {
+            Log.d("THEOliveView", "waiting for player, $channelID");
+            return;
+        }
+
+        loadChannelJob!!.start()
     }
 
 }

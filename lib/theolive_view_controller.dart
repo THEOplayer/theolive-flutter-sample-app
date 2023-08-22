@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:theolive_flutter_sample/pigeon/theolive_api.g.dart';
 
 class THEOliveViewController implements  THEOliveFlutterAPI{
@@ -10,9 +11,11 @@ class THEOliveViewController implements  THEOliveFlutterAPI{
     THEOliveFlutterAPI.setup(this);
   }
 
-  // if we want to call async
-  loadChannel(String channelId)  {
-    _nativeAPI.loadChannel(channelId);
+  void loadChannel(String channelId) {
+    _nativeAPI.loadChannel(channelId).onError(
+            //consume the exception, it is irrelevant to the flow, just for information
+            (error, stackTrace) => print("ERROR during loadChannel: $error")
+    );
   }
 
   @override
