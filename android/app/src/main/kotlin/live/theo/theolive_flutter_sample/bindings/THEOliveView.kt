@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -67,15 +66,17 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     }
 
-    override fun onChannelLoaded(channelInfo: ChannelInfo) {
+    override fun onChannelLoaded(channelId: String) {
         Log.d("THEOliveView", "onChannelLoaded:");
 
-        super.onChannelLoaded(channelInfo)
-        flutterApi.onChannelLoadedEvent(channelInfo.channelId, callback = {
-            Log.d("THEOliveView", "JAVA onChannelLoaded ack received: " + (channelInfo.channelId))
-        });
-    }
+        super.onChannelLoaded(channelId)
+        CoroutineScope(Dispatchers.Main).launch {
+            flutterApi.onChannelLoadedEvent(channelId, callback = {
+                Log.d("THEOliveView", "JAVA onChannelLoaded ack received: " +  channelId)
+            });
+        }
 
+    }
 
     override fun getView(): View? {
         return constraintLayout
