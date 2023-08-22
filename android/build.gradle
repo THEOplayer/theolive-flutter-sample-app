@@ -5,6 +5,9 @@ buildscript {
         mavenCentral()
         maven { url 'https://mvn.theoplayer.com/snapshots' }
         maven { url 'https://mvn.theoplayer.com/releases' }
+        
+        // for THEOplayer Android Core dependencies:
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
@@ -19,6 +22,10 @@ allprojects {
         mavenCentral()
         maven { url 'https://mvn.theoplayer.com/snapshots' }
         maven { url 'https://mvn.theoplayer.com/releases' }
+
+        // for THEOplayer Android Core dependencies:
+        maven { url 'https://jitpack.io' }
+
     }
 }
 
