@@ -109,6 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
               THEOliveView(key: playerUniqueKey, onTHEOliveViewCreated:(THEOliveViewController controller) {
                 // assign the controller to interact with the player
                 _theoController = controller;
+                // automatically load the channel once the view is ready
+                _callLoadChannel();
               }
               )
             ),
