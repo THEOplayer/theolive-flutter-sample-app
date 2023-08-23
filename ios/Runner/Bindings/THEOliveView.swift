@@ -45,14 +45,14 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     func createNativeView(view _view: UIView){
         _view.backgroundColor = UIColor.yellow
 
+        let newPlayerView = THEOliveSDK.THEOliveChromelessPlayerView(player: player)
 
-        let newPlayerView = THEOliveSDK.THEOlivePlayerViewController(player: player)
+        newPlayerView.translatesAutoresizingMaskIntoConstraints = false
+        newPlayerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        newPlayerView.frame = _view.bounds
 
-        newPlayerView.view.translatesAutoresizingMaskIntoConstraints = false
-        newPlayerView.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-        newPlayerView.view.frame = _view.bounds
-        _view.addSubview(newPlayerView.view)
+        _view.addSubview(newPlayerView)
 
     }
     
