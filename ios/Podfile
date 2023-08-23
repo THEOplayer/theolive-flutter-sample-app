@@ -6,6 +6,6 @@ target 'Runner' do
 
   # Pods for Runner
 
-  pod 'THEOliveSDK', '~> 1.0.0'
+  pod 'THEOliveSDK', '~> 3.3.0-beta-2'
 
 end
