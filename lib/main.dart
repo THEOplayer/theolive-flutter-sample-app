@@ -65,6 +65,22 @@ class _MyHomePageState extends State<MyHomePage> {
     _theoController.loadChannel("38yyniscxeglzr8n0lbku57b0");
   }
 
+  bool playing = false;
+
+  void _playPause() {
+    bool newState = false;
+    if (playing) {
+      _theoController.pause();
+      newState = false;
+    } else {
+      _theoController.play();
+      newState = true;
+    }
+    setState(() {
+      playing = newState;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -118,9 +134,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _callLoadChannel,
+        onPressed: _playPause,
         tooltip: 'Load',
-        child: const Icon(Icons.play_arrow),
+        child: playing ? const Icon(Icons.pause) : const Icon(Icons.play_arrow),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

@@ -69,6 +69,14 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
         completion(Result.success({}()))
     }
     
+    func play() throws {
+        self.player.play()
+    }
+    
+    func pause() throws {
+        self.player.pause()
+    }
+    
     // THEOlivePlayerEventListener
     func onChannelLoaded(channelId: String) {
         _flutterAPI.onChannelLoadedEvent(channelID: channelId) {

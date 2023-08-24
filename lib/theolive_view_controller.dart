@@ -18,6 +18,14 @@ class THEOliveViewController implements  THEOliveFlutterAPI{
     );
   }
 
+  void play() {
+    _nativeAPI.play();
+  }
+
+  void pause() {
+    _nativeAPI.pause();
+  }
+
   @override
   void onChannelLoadedEvent(String channelID) {
     print("$_TAG  onChannelLoaded received: $channelID");

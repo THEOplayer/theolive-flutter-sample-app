@@ -68,7 +68,6 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     override fun onChannelLoaded(channelId: String) {
         Log.d("THEOliveView", "onChannelLoaded:");
-
         super.onChannelLoaded(channelId)
         CoroutineScope(Dispatchers.Main).launch {
             flutterApi.onChannelLoadedEvent(channelId, callback = {
@@ -83,6 +82,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
     }
 
     override fun dispose() {
+        Log.d("THEOliveView", "dispose");
         loadChannelJob?.isActive.let {
             loadChannelJob?.cancel("DISPOSED", CancellationException("THEOliveView disposed!"))
         }
@@ -120,6 +120,22 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         }
 
         loadChannelJob!!.start()
+    }
+
+    override fun play() {
+        if (this.player == null) {
+            Log.d("THEOliveView", "player is missing!");
+            return
+        }
+        this.player!!.play();
+    }
+
+    override fun pause() {
+        if (this.player == null) {
+            Log.d("THEOliveView", "player is missing!");
+            return
+        }
+        this.player!!.pause()
     }
 
 }

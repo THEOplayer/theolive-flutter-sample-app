@@ -37,6 +37,8 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol THEOliveNativeAPI {
   func loadChannel(channelID: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func play() throws
+  func pause() throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -60,6 +62,32 @@ class THEOliveNativeAPISetup {
       }
     } else {
       loadChannelChannel.setMessageHandler(nil)
+    }
+    let playChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.theolive_flutter_sample.THEOliveNativeAPI.play", binaryMessenger: binaryMessenger)
+    if let api = api {
+      playChannel.setMessageHandler { _, reply in
+        do {
+          try api.play()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      playChannel.setMessageHandler(nil)
+    }
+    let pauseChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.theolive_flutter_sample.THEOliveNativeAPI.pause", binaryMessenger: binaryMessenger)
+    if let api = api {
+      pauseChannel.setMessageHandler { _, reply in
+        do {
+          try api.pause()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      pauseChannel.setMessageHandler(nil)
     }
   }
 }

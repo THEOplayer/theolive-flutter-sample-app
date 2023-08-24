@@ -21,6 +21,10 @@ abstract class THEOliveNativeAPI {
 
   @async
   void loadChannel(String channelID);
+
+  void play();
+
+  void pause();
 }
 
 //Native talks to Dart
