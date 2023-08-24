@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   UniqueKey playerUniqueKey = UniqueKey();
 
   void _callLoadChannel() {
-    _theoController.loadChannel("0nhw9z5zaz6bek27vdng81be5");
+    _theoController.loadChannel("38yyniscxeglzr8n0lbku57b0");
   }
 
   @override
