@@ -36,6 +36,7 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
+        allowUpdates: true
         artifacts: "build/app/outputs/flutter-apk/app-release.apk"
         body: "release built on ${{ github.sha }}"
         commit: "${{ github.sha }}"
@@ -45,15 +46,25 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
+    
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
         cache: true
         architecture: x64
+        
     - run: flutter doctor
     - run: flutter pub get
     - run: pod install
       working-directory: ./ios
     - run: flutter build ios --release --no-codesign
+
+    - uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        artifacts: "build/ios/iphoneos/Runner.app"
+        body: "release built on ${{ github.sha }}"
+        commit: "${{ github.sha }}"
+        tag: "run_id_${{ github.run_id }}"
     
 
