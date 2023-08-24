@@ -59,10 +59,13 @@ jobs:
       working-directory: ./ios
     - run: flutter build ios --release --no-codesign
 
+    - name: Create zip
+      run: zip -r -q Runner.zip build/ios/iphoneos/Runner.app
+
     - uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
-        artifacts: "build/ios/iphoneos/Runner.app"
+        artifacts: "Runner.zip"
         body: "release built on ${{ github.sha }}"
         commit: "${{ github.sha }}"
         tag: "run_id_${{ github.run_id }}"
