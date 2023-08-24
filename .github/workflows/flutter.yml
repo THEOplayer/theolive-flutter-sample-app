@@ -29,3 +29,8 @@ jobs:
     - run: flutter --version
     - run: flutter pub get
     - run: flutter build apk
+
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+        body: "release built on ${{ github.sha }}"
