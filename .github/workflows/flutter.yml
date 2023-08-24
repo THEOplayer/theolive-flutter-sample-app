@@ -52,4 +52,8 @@ jobs:
         architecture: x64
     - run: flutter doctor
     - run: flutter pub get
+    - run: pod install
+      working-directory: ./ios
     - run: flutter build ios --release --no-codesign
+    
+
