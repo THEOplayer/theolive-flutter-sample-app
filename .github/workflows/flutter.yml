@@ -39,5 +39,5 @@ jobs:
         artifacts: "build/app/outputs/flutter-apk/app-release.apk"
         body: "release built on ${{ github.sha }}"
         commit: "${{ github.sha }}"
-        tag: "${{ github.event.repository.updated_at}}"
+        tag: "run_id_${{ github.run_id }}"
 
