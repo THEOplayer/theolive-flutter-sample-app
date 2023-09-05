@@ -88,42 +88,58 @@ class _MoviePageState extends State<MoviePage> implements THEOliveViewController
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'THEOlive',
+      body: OrientationBuilder(
+        builder: (BuildContext context, Orientation orientation) {
+          //check orientation variable to identify the current mode
+          double w = 300;
+          double h = 300;
+          bool landscape = false;
+
+          if(orientation == Orientation.landscape){
+            print("The screen is on Landscape mode.");
+            w = MediaQuery.of(context).size.width;
+            h = MediaQuery.of(context).size.height * 0.7;
+            landscape = true;
+          }
+
+          return Center(
+            // Center is a layout widget. It takes a single child and positions it
+            // in the middle of the parent.
+            child: Column(
+              // Column is also a layout widget. It takes a list of children and
+              // arranges them vertically. By default, it sizes itself to fit its
+              // children horizontally, and tries to be as tall as its parent.
+              //
+              // Column has various properties to control how it sizes itself and
+              // how it positions its children. Here we use mainAxisAlignment to
+              // center the children vertically; the main axis here is the vertical
+              // axis because Columns are vertical (the cross axis would be
+              // horizontal).
+              //
+              // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+              // action in the IDE, or press "p" in the console), to see the
+              // wireframe for each widget.
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'THEOlive',
+                ),
+                Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(width: w, height: h, color: Colors.black, child:
+                      theoLiveView,
+                      ),
+                      !loaded ? Container(width: w, height: h, color: Colors.black, child: const Center(child: SizedBox(width: 50, height: 50, child: RefreshProgressIndicator()))) : Container(),
+                    ]
+                ),
+                !landscape ? FilledButton(onPressed: (){
+                  Navigator.pop(context);
+                }, child: Text("Go back")) : Container(),
+              ],
             ),
-            Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(width: 300, height: 300, color: Colors.black, child:
-                    theoLiveView,
-                  ),
-                  !loaded ? Container(width: 300, height: 300, color: Colors.black, child: const Center(child: SizedBox(width: 50, height: 50, child: RefreshProgressIndicator()))) : Container(),
-                ]
-            ),
-            FilledButton(onPressed: (){
-              Navigator.pop(context);
-            }, child: Text("Go back")),
-          ],
-        ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _playPause,
