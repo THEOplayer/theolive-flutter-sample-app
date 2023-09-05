@@ -30,6 +30,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
     private var loadChannelJob: Deferred<Unit>? = null
 
     init {
+        Log.d("THEOliveView", "init $viewId");
 
         THEOliveNativeAPI.setUp(messenger, this);
         flutterApi = THEOliveFlutterAPI(messenger);
@@ -46,7 +47,8 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         cv.id = View.generateViewId();
         constraintLayout.addView(cv)
 
-        cv.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        // only change it if there are issues with the view lifecycle
+        //cv.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
         cv.setContent {
             val player = rememberTHEOlivePlayer()
 
@@ -74,7 +76,10 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
                 Log.d("THEOliveView", "JAVA onChannelLoaded ack received: " +  channelId)
             });
         }
+    }
 
+    override fun onError(message: String) {
+        Log.d("THEOliveView", "error: $message");
     }
 
     override fun getView(): View? {
@@ -86,6 +91,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         loadChannelJob?.isActive.let {
             loadChannelJob?.cancel("DISPOSED", CancellationException("THEOliveView disposed!"))
         }
+        player?.removeEventListener(this);
     }
 
     override fun loadChannel(channelID: String, callback: (Result<Unit>) -> Unit) {

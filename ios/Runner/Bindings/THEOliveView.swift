@@ -84,4 +84,8 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
         }
     }
     
+    func onError(message: String) {
+        print(THEOliveView.TAG + " error: " + message)
+    }
+    
 }
