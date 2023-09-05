@@ -78,6 +78,16 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         }
     }
 
+    override fun onPlaying() {
+        Log.d("THEOliveView", "onPlaying");
+        super.onPlaying()
+        CoroutineScope(Dispatchers.Main).launch {
+            flutterApi.onPlaying {
+                Log.d("THEOliveView", "JAVA onPlaying ack received: ")
+            }
+        }
+    }
+
     override fun onError(message: String) {
         Log.d("THEOliveView", "error: $message");
     }
@@ -126,6 +136,11 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         }
 
         loadChannelJob!!.start()
+    }
+
+    override fun manualDispose() {
+        Log.d("THEOliveView", "manualDispose");
+        //DO NOTHING, normal dispose() flow should be called by Flutter
     }
 
     override fun play() {

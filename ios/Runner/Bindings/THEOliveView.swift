@@ -14,15 +14,19 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     
     private static var TAG = "FL_IOS_THEOliveView"
     private var _view: UIView
+    private let _viewId: Int64
     private let _flutterAPI: THEOliveFlutterAPI
     private let player = THEOliveSDK.THEOlivePlayer()
 
+    var newPlayerView: THEOliveSDK.THEOliveChromelessPlayerView?
+    
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
         arguments args: Any?,
         binaryMessenger messenger: FlutterBinaryMessenger?
     ) {
+        _viewId = viewId
         _view = UIView()
         _view.frame = frame
         _flutterAPI = THEOliveFlutterAPI(binaryMessenger: messenger!)
@@ -53,6 +57,8 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
         newPlayerView.frame = _view.bounds
 
         _view.addSubview(newPlayerView)
+        
+        self.newPlayerView = newPlayerView
 
     }
     
@@ -77,6 +83,16 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
         self.player.pause()
     }
     
+    // Fix for https://github.com/flutter/flutter/issues/97499
+    // The PlatformViews are not deallocated in time, so we clean up upfront.
+    func manualDispose() throws {
+        print(THEOliveView.TAG + " manualDispose" )
+        player.remove(eventListener: self)
+        newPlayerView?.removeFromSuperview()
+        player.reset()
+                
+    }
+    
     // THEOlivePlayerEventListener
     func onChannelLoaded(channelId: String) {
         _flutterAPI.onChannelLoadedEvent(channelID: channelId) {
@@ -84,8 +100,17 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
         }
     }
     
+    func onPlaying() {
+        _flutterAPI.onPlaying {
+            print(THEOliveView.TAG + " onPlaying ack received")
+        }
+    }
+    
     func onError(message: String) {
         print(THEOliveView.TAG + " error: " + message)
     }
     
+    deinit {
+        print(THEOliveView.TAG + " deinit: " + String(_viewId))
+    }
 }

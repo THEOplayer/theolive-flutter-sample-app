@@ -25,6 +25,8 @@ abstract class THEOliveNativeAPI {
   void play();
 
   void pause();
+
+  void manualDispose();
 }
 
 //Native talks to Dart
@@ -32,4 +34,5 @@ abstract class THEOliveNativeAPI {
 @FlutterApi()
 abstract class THEOliveFlutterAPI {
   void onChannelLoadedEvent(String channelID);
+  void onPlaying();
 }

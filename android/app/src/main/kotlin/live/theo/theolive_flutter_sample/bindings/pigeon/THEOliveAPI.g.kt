@@ -48,6 +48,7 @@ interface THEOliveNativeAPI {
   fun loadChannel(channelID: String, callback: (Result<Unit>) -> Unit)
   fun play()
   fun pause()
+  fun manualDispose()
 
   companion object {
     /** The codec used by THEOliveNativeAPI. */
@@ -110,6 +111,23 @@ interface THEOliveNativeAPI {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.theolive_flutter_sample.THEOliveNativeAPI.manualDispose", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            var wrapped: List<Any?>
+            try {
+              api.manualDispose()
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
     }
   }
 }
@@ -125,6 +143,12 @@ class THEOliveFlutterAPI(private val binaryMessenger: BinaryMessenger) {
   fun onChannelLoadedEvent(channelIDArg: String, callback: () -> Unit) {
     val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.theolive_flutter_sample.THEOliveFlutterAPI.onChannelLoadedEvent", codec)
     channel.send(listOf(channelIDArg)) {
+      callback()
+    }
+  }
+  fun onPlaying(callback: () -> Unit) {
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.theolive_flutter_sample.THEOliveFlutterAPI.onPlaying", codec)
+    channel.send(null) {
       callback()
     }
   }

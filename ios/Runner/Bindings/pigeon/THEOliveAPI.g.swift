@@ -39,6 +39,7 @@ protocol THEOliveNativeAPI {
   func loadChannel(channelID: String, completion: @escaping (Result<Void, Error>) -> Void)
   func play() throws
   func pause() throws
+  func manualDispose() throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -89,6 +90,19 @@ class THEOliveNativeAPISetup {
     } else {
       pauseChannel.setMessageHandler(nil)
     }
+    let manualDisposeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.theolive_flutter_sample.THEOliveNativeAPI.manualDispose", binaryMessenger: binaryMessenger)
+    if let api = api {
+      manualDisposeChannel.setMessageHandler { _, reply in
+        do {
+          try api.manualDispose()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      manualDisposeChannel.setMessageHandler(nil)
+    }
   }
 }
 /// Generated class from Pigeon that represents Flutter messages that can be called from Swift.
@@ -100,6 +114,12 @@ class THEOliveFlutterAPI {
   func onChannelLoadedEvent(channelID channelIDArg: String, completion: @escaping () -> Void) {
     let channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.theolive_flutter_sample.THEOliveFlutterAPI.onChannelLoadedEvent", binaryMessenger: binaryMessenger)
     channel.sendMessage([channelIDArg] as [Any?]) { _ in
+      completion()
+    }
+  }
+  func onPlaying(completion: @escaping () -> Void) {
+    let channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.theolive_flutter_sample.THEOliveFlutterAPI.onPlaying", binaryMessenger: binaryMessenger)
+    channel.sendMessage(nil) { _ in
       completion()
     }
   }
