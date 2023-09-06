@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:theolive_flutter_sample/fullscreen_page.dart';
 import 'package:theolive_flutter_sample/theolive_view.dart';
 import 'package:theolive_flutter_sample/theolive_view_controller.dart';
 
@@ -23,7 +26,7 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> implements THEOliveViewControllerEventListener {
 
   late THEOliveViewController _theoController;
-  UniqueKey playerUniqueKey = UniqueKey();
+  GlobalKey playerUniqueKey = GlobalKey(debugLabel: "playerUniqueKey");
 
   void _callLoadChannel() {
     _theoController.loadChannel("38yyniscxeglzr8n0lbku57b0");
@@ -32,11 +35,13 @@ class _MoviePageState extends State<MoviePage> implements THEOliveViewController
 
   bool playing = false;
   bool loaded = false;
+  bool inFullscreen = false;
 
   late THEOliveView theoLiveView;
 
   @override
   void initState() {
+    print("_MoviePageState with THEOliveView: initState ");
     super.initState();
     theoLiveView = THEOliveView(key: playerUniqueKey, onTHEOliveViewCreated:(THEOliveViewController controller) {
       // assign the controller to interact with the player
@@ -46,13 +51,16 @@ class _MoviePageState extends State<MoviePage> implements THEOliveViewController
       _callLoadChannel();
     }
     );
+
   }
 
   @override
   void dispose() {
+    print("_MoviePageState with THEOliveView: dispose ");
+
     // NOTE: this would be nicer, if we move it inside the THEOliveView that's a StatefulWidget
     // FIX for https://github.com/flutter/flutter/issues/97499
-    _theoController.manualDispose();
+    //_theoController.manualDispose();
     super.dispose();
   }
 
@@ -98,7 +106,7 @@ class _MoviePageState extends State<MoviePage> implements THEOliveViewController
           if(orientation == Orientation.landscape){
             print("The screen is on Landscape mode.");
             w = MediaQuery.of(context).size.width;
-            h = MediaQuery.of(context).size.height * 0.7;
+            h = MediaQuery.of(context).size.height * 0.5;
             landscape = true;
           }
 
@@ -127,15 +135,29 @@ class _MoviePageState extends State<MoviePage> implements THEOliveViewController
                 Stack(
                     alignment: Alignment.center,
                     children: [
-                      Container(width: w, height: h, color: Colors.black, child:
-                      theoLiveView,
-                      ),
+                      !inFullscreen ? Container(width: w, height: h, color: Colors.black, child: theoLiveView) : Container(),
                       !loaded ? Container(width: w, height: h, color: Colors.black, child: const Center(child: SizedBox(width: 50, height: 50, child: RefreshProgressIndicator()))) : Container(),
                     ]
                 ),
                 !landscape ? FilledButton(onPressed: (){
                   Navigator.pop(context);
                 }, child: Text("Go back")) : Container(),
+                !landscape ? FilledButton(onPressed: () {
+                  setState(() {
+                    inFullscreen = true;
+                  });
+                  //Navigator.push(context, MaterialPageRoute(builder: (context) =>  FullscreenPage(playerViewKey: playerUniqueKey,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return FullscreenPage(playerWidget: theoLiveView,);
+                    //return FullscreenPage(playerViewKey: playerUniqueKey);
+                  }, settings: null)).then((value){
+                    print("_MoviePageState with THEOliveView: return from fullscreen ");
+                    setState(() {
+                      inFullscreen = false;
+                    });
+                  });
+
+                }, child: Text("Open Fullscreen")) : Container(),
               ],
             ),
           );
