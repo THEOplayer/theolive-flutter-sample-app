@@ -68,9 +68,11 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     }
 
+    override fun onChannelLoadStart(channelId: String) {
+        Log.d("THEOliveView", "onChannelLoadStart: $channelId");
+    }
     override fun onChannelLoaded(channelId: String) {
         Log.d("THEOliveView", "onChannelLoaded:");
-        super.onChannelLoaded(channelId)
         CoroutineScope(Dispatchers.Main).launch {
             flutterApi.onChannelLoadedEvent(channelId, callback = {
                 Log.d("THEOliveView", "JAVA onChannelLoaded ack received: " +  channelId)
@@ -78,14 +80,37 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         }
     }
 
+    override fun onChannelOffline(channelId: String) {
+        Log.d("THEOliveView", "onChannelOffline: $channelId");
+    }
+
     override fun onPlaying() {
         Log.d("THEOliveView", "onPlaying");
-        super.onPlaying()
         CoroutineScope(Dispatchers.Main).launch {
             flutterApi.onPlaying {
                 Log.d("THEOliveView", "JAVA onPlaying ack received: ")
             }
         }
+    }
+
+    override fun onWaiting() {
+        Log.d("THEOliveView", "onWaiting");
+    }
+
+    override fun onPause() {
+        Log.d("THEOliveView", "onPause");
+    }
+
+    override fun onPlay() {
+        Log.d("THEOliveView", "onPlay");
+    }
+
+    override fun onIntentToFallback() {
+        Log.d("THEOliveView", "onIntentToFallback");
+    }
+
+    override fun onReset() {
+        Log.d("THEOliveView", "onReset");
     }
 
     override fun onError(message: String) {
