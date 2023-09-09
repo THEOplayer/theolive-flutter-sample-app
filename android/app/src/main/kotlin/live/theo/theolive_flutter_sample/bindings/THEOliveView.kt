@@ -111,6 +111,8 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     override fun onChannelLoadStart(channelId: String) {
         Log.d("THEOliveView", "onChannelLoadStart: $channelId");
+        isFirstPlaying = false
+
     }
     override fun onChannelLoaded(channelId: String) {
         Log.d("THEOliveView", "onChannelLoaded:");
@@ -153,6 +155,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     override fun onIntentToFallback() {
         Log.d("THEOliveView", "onIntentToFallback");
+        isFirstPlaying = false
     }
 
     override fun onReset() {
