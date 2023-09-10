@@ -116,6 +116,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
     }
     override fun onChannelLoaded(channelId: String) {
         Log.d("THEOliveView", "onChannelLoaded:");
+        isFirstPlaying = false
         CoroutineScope(Dispatchers.Main).launch {
             flutterApi.onChannelLoadedEvent(channelId, callback = {
                 Log.d("THEOliveView", "JAVA onChannelLoaded ack received: " +  channelId)
@@ -125,6 +126,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     override fun onChannelOffline(channelId: String) {
         Log.d("THEOliveView", "onChannelOffline: $channelId");
+        isFirstPlaying = false
     }
 
     override fun onPlaying() {
@@ -165,6 +167,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
     override fun onError(message: String) {
         Log.d("THEOliveView", "error: $message");
+        isFirstPlaying = false
     }
 
     override fun getView(): View? {
