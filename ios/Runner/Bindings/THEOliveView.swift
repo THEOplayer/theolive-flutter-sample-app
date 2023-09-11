@@ -107,7 +107,31 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     }
     
     func onError(message: String) {
-        print(THEOliveView.TAG + " error: " + message)
+        print(THEOliveView.TAG + " onError: " + message)
+    }
+    
+    func onChannelOffline(channelId: String) {
+        print(THEOliveView.TAG + " onChannelOffline: " + channelId)
+    }
+    
+    func onChannelLoadStart(channelId: String) {
+        print(THEOliveView.TAG + " onChannelLoadStart: " + channelId)
+    }
+    
+    func onWaiting() {
+        print(THEOliveView.TAG + " onWaiting" )
+    }
+    
+    func onPlay() {
+        print(THEOliveView.TAG + " onPlay" )
+    }
+    
+    func onPause() {
+        print(THEOliveView.TAG + " onPause" )
+    }
+    
+    func onIntentToFallback() {
+        print(THEOliveView.TAG + " onIntentToFallback" )
     }
     
     deinit {
