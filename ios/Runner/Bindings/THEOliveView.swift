@@ -9,6 +9,9 @@ import Foundation
 import Flutter
 import UIKit
 import THEOliveSDK
+import os
+
+let log = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "com.theoplayer.THEOliveViewSample" , category: "THEOliveView")
 
 class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, THEOliveNativeAPI {
     
@@ -70,7 +73,7 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     
     // THEOliveNativeAPI
     func loadChannel(channelID: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        print(THEOliveView.TAG + " loadChannel API call")
+        os_log("loadChannel API call", log: log, type: .debug)
         self.player.loadChannel(channelID)
         completion(Result.success({}()))
     }
@@ -86,7 +89,7 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     // Fix for https://github.com/flutter/flutter/issues/97499
     // The PlatformViews are not deallocated in time, so we clean up upfront.
     func manualDispose() throws {
-        print(THEOliveView.TAG + " manualDispose" )
+        os_log("manualDispose", log: log, type: .debug)
         player.remove(eventListener: self)
         newPlayerView?.removeFromSuperview()
         player.reset()
@@ -95,46 +98,48 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
     
     // THEOlivePlayerEventListener
     func onChannelLoaded(channelId: String) {
+        os_log("onChannelLoaded: %@", log: log, type: .debug, channelId)
         _flutterAPI.onChannelLoadedEvent(channelID: channelId) {
-            print(THEOliveView.TAG + " onChannelLoaded ack received: " + channelId)
+            os_log("onChannelLoaded ack received: %@", log: log, type: .debug, channelId)
         }
     }
     
     func onPlaying() {
+        os_log("onPlaying", log: log, type: .debug)
         _flutterAPI.onPlaying {
-            print(THEOliveView.TAG + " onPlaying ack received")
+           os_log("onPlaying ack received", log: log, type: .debug)
         }
     }
     
     func onError(message: String) {
-        print(THEOliveView.TAG + " onError: " + message)
+        os_log("onError: %@" , log: log, type: .debug, message)
     }
     
     func onChannelOffline(channelId: String) {
-        print(THEOliveView.TAG + " onChannelOffline: " + channelId)
+        os_log("onChannelOffline: %@" , log: log, type: .debug, channelId)
     }
     
     func onChannelLoadStart(channelId: String) {
-        print(THEOliveView.TAG + " onChannelLoadStart: " + channelId)
+        os_log("onChannelLoadStart: %@" , log: log, type: .debug, channelId)
     }
     
     func onWaiting() {
-        print(THEOliveView.TAG + " onWaiting" )
+        os_log("onWaiting", log: log, type: .debug)
     }
     
     func onPlay() {
-        print(THEOliveView.TAG + " onPlay" )
+        os_log("onPlay", log: log, type: .debug)
     }
     
     func onPause() {
-        print(THEOliveView.TAG + " onPause" )
+        os_log("onPause", log: log, type: .debug)
     }
     
     func onIntentToFallback() {
-        print(THEOliveView.TAG + " onIntentToFallback" )
+        os_log("onIntentToFallback", log: log, type: .debug)
     }
     
     deinit {
-        print(THEOliveView.TAG + " deinit: " + String(_viewId))
+        os_log("deinit %d", log: log, type: .debug, _viewId)
     }
 }
