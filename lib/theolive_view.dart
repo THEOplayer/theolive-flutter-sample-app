@@ -50,6 +50,7 @@ class _THEOliveViewState extends State<THEOliveView> {
 
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
+        /*
         return PlatformViewLink(
           viewType: viewType,
           surfaceFactory:
@@ -80,6 +81,22 @@ class _THEOliveViewState extends State<THEOliveView> {
                 widget.onTHEOliveViewCreated(viewController);
               })
               ..create();
+          },
+        );
+         */
+        return AndroidView(
+          clipBehavior: Clip.none,
+          viewType: viewType,
+          layoutDirection: TextDirection.ltr,
+          creationParams: creationParams,
+          creationParamsCodec: StandardMessageCodec(),
+          gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+          hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          onPlatformViewCreated: (id){
+            print("_THEOliveViewState OnPlatformViewCreatedListener");
+            viewController = THEOliveViewController(id);
+            widget.viewController = viewController;
+            widget.onTHEOliveViewCreated(viewController);
           },
         );
       case TargetPlatform.iOS:
