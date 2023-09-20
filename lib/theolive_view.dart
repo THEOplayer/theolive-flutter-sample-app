@@ -62,7 +62,7 @@ class _THEOliveViewState extends State<THEOliveView> {
             );
           },
           onCreatePlatformView: (params) {
-            return PlatformViewsService.initExpensiveAndroidView(
+            return PlatformViewsService.initAndroidView(
               id: params.id,
               viewType: viewType,
               layoutDirection: TextDirection.ltr,
