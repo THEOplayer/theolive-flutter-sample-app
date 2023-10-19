@@ -43,6 +43,10 @@ class THEOliveViewController implements  THEOliveFlutterAPI{
     print("$_TAG  onPlaying received");
     eventListener?.onPlaying();
   }
+
+  void preloadChannels(List<String> list) {
+    _nativeAPI.preloadChannels(list);
+  }
 }
 
 abstract class THEOliveViewControllerEventListener {

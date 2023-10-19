@@ -149,6 +149,10 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         //DO NOTHING, normal dispose() flow should be called by Flutter
     }
 
+    override fun preloadChannels(channelIDs: List<String>) {
+        this.playerView.player.preloadChannels(channelIDs.toTypedArray());
+    }
+
     override fun play() {
         this.playerView.player.play();
     }

@@ -86,6 +86,11 @@ class THEOliveView: NSObject, FlutterPlatformView, THEOlivePlayerEventListener, 
         self.player.pause()
     }
     
+    func preloadChannels(channelIDs: [String]) throws {
+        self.player.preloadChannels(channelIDs)
+    }
+    
+    
     // Fix for https://github.com/flutter/flutter/issues/97499
     // The PlatformViews are not deallocated in time, so we clean up upfront.
     func manualDispose() throws {

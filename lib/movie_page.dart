@@ -47,6 +47,8 @@ class _MoviePageState extends State<MoviePage> implements THEOliveViewController
       // assign the controller to interact with the player
       _theoController = controller;
       _theoController.eventListener = this;
+      //_theoController.preloadChannels(["38yyniscxeglzr8n0lbku57b0"]);
+
       // automatically load the channel once the view is ready
       _callLoadChannel();
     }
