@@ -35,7 +35,9 @@ class _THEOliveViewState extends State<THEOliveView> {
     print("_THEOliveViewState dispose");
     // NOTE: this would be nicer, if we move it inside the THEOliveView that's a StatefulWidget
     // FIX for https://github.com/flutter/flutter/issues/97499
-    viewController.manualDispose();
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      viewController.manualDispose();
+    }
     super.dispose();
   }
 
