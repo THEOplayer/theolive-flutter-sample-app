@@ -40,6 +40,7 @@ protocol THEOliveNativeAPI {
   func play() throws
   func pause() throws
   func manualDispose() throws
+  func preloadChannels(channelIDs: [String]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -102,6 +103,21 @@ class THEOliveNativeAPISetup {
       }
     } else {
       manualDisposeChannel.setMessageHandler(nil)
+    }
+    let preloadChannelsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.theolive_flutter_sample.THEOliveNativeAPI.preloadChannels", binaryMessenger: binaryMessenger)
+    if let api = api {
+      preloadChannelsChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let channelIDsArg = args[0] as! [String]
+        do {
+          try api.preloadChannels(channelIDs: channelIDsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      preloadChannelsChannel.setMessageHandler(nil)
     }
   }
 }

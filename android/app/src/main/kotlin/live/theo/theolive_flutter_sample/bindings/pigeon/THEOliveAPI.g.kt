@@ -49,6 +49,7 @@ interface THEOliveNativeAPI {
   fun play()
   fun pause()
   fun manualDispose()
+  fun preloadChannels(channelIDs: List<String>)
 
   companion object {
     /** The codec used by THEOliveNativeAPI. */
@@ -118,6 +119,25 @@ interface THEOliveNativeAPI {
             var wrapped: List<Any?>
             try {
               api.manualDispose()
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.theolive_flutter_sample.THEOliveNativeAPI.preloadChannels", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val channelIDsArg = args[0] as List<String>
+            var wrapped: List<Any?>
+            try {
+              api.preloadChannels(channelIDsArg)
               wrapped = listOf<Any?>(null)
             } catch (exception: Throwable) {
               wrapped = wrapError(exception)

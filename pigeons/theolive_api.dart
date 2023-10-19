@@ -27,6 +27,8 @@ abstract class THEOliveNativeAPI {
   void pause();
 
   void manualDispose();
+
+  void preloadChannels(List<String> channelIDs);
 }
 
 //Native talks to Dart
