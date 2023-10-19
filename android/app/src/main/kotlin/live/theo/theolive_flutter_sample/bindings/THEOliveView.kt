@@ -135,6 +135,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
 
         playerView.player.removeEventListener(this);
         constraintLayout.removeView(playerView)
+        playerView.player.destroy()
         playerView.onDestroy()
     }
 
