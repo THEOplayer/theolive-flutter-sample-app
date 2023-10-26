@@ -32,11 +32,11 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
     // TODO: remove it once initExpensiveAndroidView is not used.
     private var isFirstPlaying: Boolean = false
         set(value) {
-            if (value) {
+            //if (value) {
                 playerView.visibility = View.VISIBLE
-            } else {
-                playerView.visibility = View.INVISIBLE
-            }
+            //} else {
+            //    playerView.visibility = View.INVISIBLE
+            //}
             field = value
         }
     init {
