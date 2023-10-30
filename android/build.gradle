@@ -3,8 +3,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        //maven { url 'https://mvn.theoplayer.com/releases' }
-        maven { url 'https://mvn.theoplayer.com/snapshots' }
+        maven { url 'https://mvn.theoplayer.com/releases' }
+        //maven { url 'https://mvn.theoplayer.com/snapshots' }
 
         // for THEOplayer Android Core dependencies:
         maven { url 'https://jitpack.io' }
@@ -20,8 +20,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        //maven { url 'https://mvn.theoplayer.com/releases' }
-        maven { url 'https://mvn.theoplayer.com/snapshots' }
+        maven { url 'https://mvn.theoplayer.com/releases' }
+        //maven { url 'https://mvn.theoplayer.com/snapshots' }
 
         // for THEOplayer Android Core dependencies:
         maven { url 'https://jitpack.io' }

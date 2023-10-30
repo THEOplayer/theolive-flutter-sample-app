@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.theolive.player.EventListener
 import com.theolive.player.PlayerView
+import com.theolive.player.RenderingTarget
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.platform.PlatformView
 import kotlinx.coroutines.CoroutineScope
@@ -56,6 +57,7 @@ class THEOliveView(context: Context, viewId: Int, args: Any?, messenger: BinaryM
         id = viewId
         constraintLayout.id = viewId
         playerView = PlayerView(context)
+        playerView.setRenderingTarget(RenderingTarget.TEXTURE_VIEW);
         playerView.id = View.generateViewId()
         playerView.layoutParams = layoutParams
         //playerView.setBackgroundColor(android.graphics.Color.RED)
